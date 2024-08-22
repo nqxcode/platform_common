@@ -138,3 +138,8 @@ func (r *redisClient) Ping(ctx context.Context) error {
 func (r *redisClient) FlushDB(ctx context.Context) error {
 	return r.Client.FlushDB(ctx).Err()
 }
+
+// Close closes redis client
+func (r *redisClient) Close() error {
+	return r.Client.Close()
+}

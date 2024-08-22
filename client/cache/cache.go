@@ -10,8 +10,6 @@ type Cache interface {
 	SetWithTags(ctx context.Context, key string, value any, tags []string, TTLInSec *int64) error
 	Delete(ctx context.Context, keys ...string) error
 	DeleteByTags(ctx context.Context, tags []string) error
-
 	Ping(ctx context.Context) error
-
 	FlushDB(ctx context.Context) error
 }

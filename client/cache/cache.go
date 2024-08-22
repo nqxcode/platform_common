@@ -12,4 +12,5 @@ type Cache interface {
 	DeleteByTags(ctx context.Context, tags []string) error
 	Ping(ctx context.Context) error
 	FlushDB(ctx context.Context) error
+	Close() error
 }

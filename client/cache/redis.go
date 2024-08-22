@@ -13,11 +13,11 @@ type redisClient struct {
 }
 
 // NewRedisClient new Redis client
-func NewRedisClient(ctx context.Context, cfg *Config) (Cache, error) {
+func NewRedisClient(ctx context.Context, cfg RedisConfig) (Cache, error) {
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     cfg.Address,
-		Password: cfg.Password,
-		DB:       cfg.DB,
+		Addr:     cfg.Address(),
+		Password: cfg.Password(),
+		DB:       cfg.DB(),
 	})
 
 	_, err := rdb.Ping(ctx).Result()

@@ -3,6 +3,7 @@ package redis
 import (
 	"context"
 	"log"
+	"sort"
 	"time"
 
 	"github.com/nqxcode/platform_common/client/cache"
@@ -173,7 +174,7 @@ func (c *client) FlushDB(ctx context.Context) error {
 }
 
 // Scan keys with pattern
-func (c *client) Scan(ctx context.Context, pattern string) ([]string, error) {
+func (c *client) Scan(ctx context.Context, pattern string, keyComparator cache.KeyComparator) ([]string, error) {
 	result := make([]string, 0)
 
 	cursor := ZeroCursor
@@ -197,6 +198,10 @@ func (c *client) Scan(ctx context.Context, pattern string) ([]string, error) {
 				break
 			}
 		}
+
+		sort.Slice(result, func(i, j int) bool {
+			return keyComparator(result[i], result[j])
+		})
 
 		return nil
 	})

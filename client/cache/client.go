@@ -15,5 +15,5 @@ type RedisClient interface {
 	Expire(ctx context.Context, key string, expiration time.Duration) error
 	Ping(ctx context.Context) error
 	FlushDB(ctx context.Context) error
-	Scan(ctx context.Context, pattern string) ([]string, error)
+	Scan(ctx context.Context, pattern string, keyComparator KeyComparator) ([]string, error)
 }

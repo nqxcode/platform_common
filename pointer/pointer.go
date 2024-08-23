@@ -1,4 +1,4 @@
-package ref
+package pointer
 
 func ToPtr[T any](s T) *T {
 	return &s

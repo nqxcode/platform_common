@@ -209,6 +209,36 @@ func (c *client) Scan(ctx context.Context, pattern string, keyComparator cache.K
 	return result, err
 }
 
+// RPush push value to end of list by key
+func (c *client) RPush(ctx context.Context, key string, values []interface{}) error {
+	err := c.execute(ctx, func(ctx context.Context, conn redis.Conn) error {
+		_, err := conn.Do("RPUSH", redis.Args{key}.Add(values)...)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	return err
+}
+
+// LRange range of values from list by key
+func (c *client) LRange(ctx context.Context, key string, start, stop int) ([]interface{}, error) {
+	var values []interface{}
+	err := c.execute(ctx, func(ctx context.Context, conn redis.Conn) error {
+		var errEx error
+		values, errEx = redis.Values(conn.Do("LRANGE", redis.Args{key}.Add(start).Add(stop)...))
+		if errEx != nil {
+			return errEx
+		}
+
+		return nil
+	})
+
+	return values, err
+}
+
 func (c *client) execute(ctx context.Context, handler handler) error {
 	conn, err := c.getConnect(ctx)
 	if err != nil {

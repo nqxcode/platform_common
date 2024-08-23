@@ -16,4 +16,9 @@ type RedisClient interface {
 	Ping(ctx context.Context) error
 	FlushDB(ctx context.Context) error
 	Scan(ctx context.Context, pattern string, keyComparator KeyComparator) ([]string, error)
+	RPush(ctx context.Context, key string, values []interface{}) error
+	LRange(ctx context.Context, key string, start, stop int) ([]interface{}, error)
 }
+
+// KeyComparator comparator function type
+type KeyComparator func(a, b string) bool

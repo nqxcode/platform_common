@@ -169,6 +169,7 @@ func (c *client) FlushDB(ctx context.Context) error {
 	return nil
 }
 
+// Scan keys with pattern
 func (c *client) Scan(ctx context.Context, pattern string) ([]string, error) {
 	result := make([]string, 0)
 

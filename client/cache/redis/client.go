@@ -12,6 +12,8 @@ import (
 
 var _ cache.RedisClient = (*client)(nil)
 
+const DefaultScanLimit = 100
+
 type handler func(ctx context.Context, conn redis.Conn) error
 
 type client struct {
@@ -165,6 +167,37 @@ func (c *client) FlushDB(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func (c *client) Scan(ctx context.Context, pattern string) ([]string, error) {
+	result := make([]string, 0)
+
+	cursor := "0"
+	count := DefaultScanLimit
+
+	err := c.execute(ctx, func(ctx context.Context, conn redis.Conn) error {
+		for {
+			values, err := redis.Values(conn.Do("SCAN", cursor, "MATCH", pattern, "COUNT", count))
+			if err != nil {
+				return err
+			}
+
+			cursor, _ = redis.String(values[0], nil)
+			keys, _ := redis.Strings(values[1], nil)
+
+			for _, key := range keys {
+				result = append(result, key)
+			}
+
+			if cursor == "0" {
+				break
+			}
+		}
+
+		return nil
+	})
+
+	return result, err
 }
 
 func (c *client) execute(ctx context.Context, handler handler) error {

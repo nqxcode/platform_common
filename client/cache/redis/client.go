@@ -12,7 +12,10 @@ import (
 
 var _ cache.RedisClient = (*client)(nil)
 
-const DefaultScanLimit = 100
+const (
+	DefaultScanLimit = 100
+	ZeroCursor       = "0"
+)
 
 type handler func(ctx context.Context, conn redis.Conn) error
 
@@ -173,7 +176,7 @@ func (c *client) FlushDB(ctx context.Context) error {
 func (c *client) Scan(ctx context.Context, pattern string) ([]string, error) {
 	result := make([]string, 0)
 
-	cursor := "0"
+	cursor := ZeroCursor
 	count := DefaultScanLimit
 
 	err := c.execute(ctx, func(ctx context.Context, conn redis.Conn) error {
@@ -190,7 +193,7 @@ func (c *client) Scan(ctx context.Context, pattern string) ([]string, error) {
 				result = append(result, key)
 			}
 
-			if cursor == "0" {
+			if cursor == ZeroCursor {
 				break
 			}
 		}

@@ -85,6 +85,39 @@ func (c *client) HGetAll(ctx context.Context, key string) ([]interface{}, error)
 	return values, nil
 }
 
+// MultiHGetAll multi get fields by keys
+func (c *client) MultiHGetAll(ctx context.Context, keys []string) ([]cache.Values, error) {
+	valuesList := make([]cache.Values, 0, len(keys))
+	err := c.execute(ctx, func(ctx context.Context, conn redis.Conn) error {
+		for _, key := range keys {
+			err := conn.Send("HGETALL", key)
+			if err != nil {
+				return err
+			}
+		}
+
+		err := conn.Flush()
+		if err != nil {
+			return err
+		}
+
+		for _, key := range keys {
+			values, errEx := redis.Values(conn.Receive())
+			if errEx != nil {
+				return errEx
+			}
+			valuesList = append(valuesList, cache.Values{Key: key, Values: values})
+		}
+
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return valuesList, nil
+}
+
 // Get by key
 func (c *client) Get(ctx context.Context, key string) (interface{}, error) {
 	var value interface{}

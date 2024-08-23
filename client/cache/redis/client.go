@@ -99,11 +99,10 @@ func (c *client) Get(ctx context.Context, key string) (interface{}, error) {
 }
 
 // Delete by key
-func (c *client) Delete(ctx context.Context, key string) (interface{}, error) {
-	var value interface{}
+func (c *client) Delete(ctx context.Context, key string) error {
 	err := c.execute(ctx, func(ctx context.Context, conn redis.Conn) error {
 		var errEx error
-		value, errEx = conn.Do("DEL", key)
+		_, errEx = conn.Do("DEL", key)
 		if errEx != nil {
 			return errEx
 		}
@@ -111,10 +110,10 @@ func (c *client) Delete(ctx context.Context, key string) (interface{}, error) {
 		return nil
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return value, nil
+	return nil
 }
 
 // Expire value for key

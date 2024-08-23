@@ -174,7 +174,12 @@ func (c *client) FlushDB(ctx context.Context) error {
 }
 
 // Scan keys with pattern
-func (c *client) Scan(ctx context.Context, pattern string, keyComparator cache.KeyComparator) ([]string, error) {
+func (c *client) Scan(ctx context.Context, pattern string, options ...cache.ScanOption) ([]string, error) {
+	opts := cache.ScanOptions{}
+	for _, o := range options {
+		o(&opts)
+	}
+
 	result := make([]string, 0)
 
 	cursor := ZeroCursor
@@ -199,9 +204,11 @@ func (c *client) Scan(ctx context.Context, pattern string, keyComparator cache.K
 			}
 		}
 
-		sort.Slice(result, func(i, j int) bool {
-			return keyComparator(result[i], result[j])
-		})
+		if opts.KeyComparator != nil {
+			sort.Slice(result, func(i, j int) bool {
+				return (*opts.KeyComparator)(result[i], result[j])
+			})
+		}
 
 		return nil
 	})
@@ -212,7 +219,7 @@ func (c *client) Scan(ctx context.Context, pattern string, keyComparator cache.K
 // RPush push value to end of list by key
 func (c *client) RPush(ctx context.Context, key string, values []interface{}) error {
 	err := c.execute(ctx, func(ctx context.Context, conn redis.Conn) error {
-		_, err := conn.Do("RPUSH", redis.Args{key}.Add(values)...)
+		_, err := conn.Do("RPUSH", redis.Args{key}.AddFlat(values)...)
 		if err != nil {
 			return err
 		}

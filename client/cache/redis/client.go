@@ -14,7 +14,7 @@ import (
 var _ cache.RedisClient = (*client)(nil)
 
 const (
-	DefaultScanLimit = 100
+	DefaultScanCount = 100
 	ZeroCursor       = "0"
 )
 
@@ -175,7 +175,9 @@ func (c *client) FlushDB(ctx context.Context) error {
 
 // Scan keys with pattern
 func (c *client) Scan(ctx context.Context, pattern string, options ...cache.ScanOption) ([]string, error) {
-	opts := cache.ScanOptions{}
+	opts := cache.ScanOptions{
+		ScanCount: DefaultScanCount,
+	}
 	for _, o := range options {
 		o(&opts)
 	}
@@ -183,7 +185,7 @@ func (c *client) Scan(ctx context.Context, pattern string, options ...cache.Scan
 	result := make([]string, 0)
 
 	cursor := ZeroCursor
-	count := DefaultScanLimit
+	count := opts.ScanCount
 
 	err := c.execute(ctx, func(ctx context.Context, conn redis.Conn) error {
 		for {

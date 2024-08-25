@@ -7,7 +7,7 @@ on:
     branches: [ main, week_1, week_2, week_3, week_4 ]
 
 jobs:
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
     steps:
         - uses: actions/checkout@v3

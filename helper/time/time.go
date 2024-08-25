@@ -6,7 +6,8 @@ import (
 	"github.com/nqxcode/platform_common/pointer"
 )
 
-func ToUnixNanoFromSqlNullTime(value sql.NullTime) *int64 {
+// ToUnixNanoFromSQLNullTime convert sql null time to unix nano
+func ToUnixNanoFromSQLNullTime(value sql.NullTime) *int64 {
 	if !value.Valid {
 		return nil
 	}

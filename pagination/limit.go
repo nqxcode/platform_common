@@ -1,5 +1,6 @@
 package pagination
 
+// DefaultLimit default limit
 const DefaultLimit = uint64(30)
 
 // Limit represent offset and limit

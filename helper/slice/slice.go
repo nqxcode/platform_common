@@ -1,10 +1,12 @@
 package slice
 
 import (
-	"github.com/nqxcode/platform_common/pagination"
 	"strconv"
+
+	"github.com/nqxcode/platform_common/pagination"
 )
 
+// ToAnySlice typed slice to any slice
 func ToAnySlice[T any](v []T) []any {
 	result := make([]any, len(v))
 	for i := range v {
@@ -13,6 +15,7 @@ func ToAnySlice[T any](v []T) []any {
 	return result
 }
 
+// ToStringSliceFromIntSlice transform int64 slice to string slice
 func ToStringSliceFromIntSlice(v []int64) []string {
 	result := make([]string, len(v))
 	for i := range v {
@@ -21,7 +24,8 @@ func ToStringSliceFromIntSlice(v []int64) []string {
 	return result
 }
 
-func SliceByLimit[T comparable](v []T, limit pagination.Limit) []T {
+// ByLimit get slice by limit
+func ByLimit[T comparable](v []T, limit pagination.Limit) []T {
 	total := uint64(len(v))
 	if total == 0 {
 		return nil

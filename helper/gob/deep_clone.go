@@ -5,6 +5,7 @@ import (
 	"encoding/gob"
 )
 
+// DeepClone deep clone
 func DeepClone(src, dst any) {
 	var buf bytes.Buffer
 	enc := gob.NewEncoder(&buf)

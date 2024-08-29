@@ -7,12 +7,15 @@ import (
 	"github.com/IBM/sarama"
 )
 
+// Handler handle consumer message
 type Handler func(ctx context.Context, msg *sarama.ConsumerMessage) error
 
+// GroupHandler group handler
 type GroupHandler struct {
 	msgHandler Handler
 }
 
+// NewGroupHandler new group handler
 func NewGroupHandler() *GroupHandler {
 	return &GroupHandler{}
 }

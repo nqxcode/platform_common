@@ -10,3 +10,11 @@ type ConsumerConfig interface {
 	GroupID() string
 	Config() *sarama.Config
 }
+
+// ProducerConfig kafka producer configuration
+type ProducerConfig interface {
+	Brokers() []string
+	RequiredAcks() sarama.RequiredAcks
+	RetryMax() int
+	ReturnSuccesses() bool
+}

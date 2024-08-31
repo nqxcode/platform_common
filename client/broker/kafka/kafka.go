@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/nqxcode/platform_common/client/broker/kafka/consumer"
-	"github.com/nqxcode/platform_common/client/broker/kafka/producer"
 )
 
 // Consumer kafka consumer interface
@@ -15,6 +14,6 @@ type Consumer interface {
 
 // SyncProducer sync producer interface
 type SyncProducer interface {
-	Produce(topicName string, data any) (*producer.ProduceResult, error)
+	Produce(topicName string, data any) (partition int32, offset int64, err error)
 	Close() error
 }

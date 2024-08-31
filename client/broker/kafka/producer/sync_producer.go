@@ -5,11 +5,11 @@ import (
 	"fmt"
 
 	"github.com/IBM/sarama"
+
 	"github.com/nqxcode/platform_common/client/broker/kafka"
 )
 
 type syncProducer struct {
-	config   kafka.ProducerConfig
 	producer sarama.SyncProducer
 }
 
@@ -37,10 +37,10 @@ func NewSyncProducer(cfg kafka.ProducerConfig) (*syncProducer, error) {
 }
 
 // Produce produces message
-func (p *syncProducer) Produce(topicName string, value any) (*ProduceResult, error) {
+func (p *syncProducer) Produce(topicName string, value any) (int32, int64, error) {
 	data, err := json.Marshal(value)
 	if err != nil {
-		return nil, fmt.Errorf("failed to marshal message: %v", err)
+		return 0, 0, fmt.Errorf("failed to marshal message: %v", err)
 	}
 
 	produceMessage := &sarama.ProducerMessage{
@@ -50,10 +50,10 @@ func (p *syncProducer) Produce(topicName string, value any) (*ProduceResult, err
 
 	partition, offset, err := p.producer.SendMessage(produceMessage)
 	if err != nil {
-		return nil, fmt.Errorf("failed to send message in Kafka: %w", err)
+		return 0, 0, fmt.Errorf("failed to send message in Kafka: %w", err)
 	}
 
-	return &ProduceResult{Partition: partition, Offset: offset}, nil
+	return partition, offset, nil
 }
 
 // Close close producer

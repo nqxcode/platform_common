@@ -1,6 +1,7 @@
 package producer
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 
@@ -37,7 +38,7 @@ func NewSyncProducer(cfg kafka.ProducerConfig) (*syncProducer, error) {
 }
 
 // Produce produces message
-func (p *syncProducer) Produce(topicName string, value any) (int32, int64, error) {
+func (p *syncProducer) Produce(_ context.Context, topicName string, value any) (int32, int64, error) {
 	data, err := json.Marshal(value)
 	if err != nil {
 		return 0, 0, fmt.Errorf("failed to marshal message: %v", err)

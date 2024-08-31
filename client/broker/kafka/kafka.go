@@ -14,6 +14,6 @@ type Consumer interface {
 
 // SyncProducer sync producer interface
 type SyncProducer interface {
-	Produce(topicName string, data any) (partition int32, offset int64, err error)
+	Produce(ctx context.Context, topicName string, data any) (partition int32, offset int64, err error)
 	Close() error
 }

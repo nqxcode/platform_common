@@ -15,6 +15,6 @@ type Consumer interface {
 
 // SyncProducer sync producer interface
 type SyncProducer interface {
-	Produce(message *producer.Message) (*producer.ProduceResult, error)
+	Produce(topicName string, data any) (*producer.ProduceResult, error)
 	Close() error
 }

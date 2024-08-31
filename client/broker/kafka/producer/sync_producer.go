@@ -13,11 +13,6 @@ type syncProducer struct {
 	producer sarama.SyncProducer
 }
 
-type Message struct {
-	Topic string
-	Value any
-}
-
 // ProduceResult produce result
 type ProduceResult struct {
 	Partition int32
@@ -42,18 +37,14 @@ func NewSyncProducer(cfg kafka.ProducerConfig) (*syncProducer, error) {
 }
 
 // Produce produces message
-func (p *syncProducer) Produce(message *Message) (*ProduceResult, error) {
-	if message == nil {
-		return nil, fmt.Errorf("message is nil")
-	}
-
-	data, err := json.Marshal(message.Value)
+func (p *syncProducer) Produce(topicName string, value any) (*ProduceResult, error) {
+	data, err := json.Marshal(value)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal message: %v", err)
 	}
 
 	produceMessage := &sarama.ProducerMessage{
-		Topic: message.Topic,
+		Topic: topicName,
 		Value: sarama.StringEncoder(data),
 	}
 

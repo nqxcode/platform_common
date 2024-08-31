@@ -24,12 +24,6 @@ type ProduceResult struct {
 	Offset    int64
 }
 
-// SyncProducer sync producer interface
-type SyncProducer interface {
-	Produce(message *Message) (*ProduceResult, error)
-	Close() error
-}
-
 // NewSyncProducer new sync producer
 func NewSyncProducer(cfg kafka.ProducerConfig) (*syncProducer, error) {
 	config := sarama.NewConfig()

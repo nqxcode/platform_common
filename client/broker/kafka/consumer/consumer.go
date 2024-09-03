@@ -25,12 +25,14 @@ func NewConsumer(
 	}
 }
 
+// Consume joins a cluster of consumers
 func (c *consumer) Consume(ctx context.Context, topicName string, handler Handler) error {
 	c.consumerGroupHandler.msgHandler = handler
 
 	return c.consume(ctx, topicName)
 }
 
+// Close stops the consumer group
 func (c *consumer) Close() error {
 	return c.consumerGroup.Close()
 }

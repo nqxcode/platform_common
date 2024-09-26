@@ -14,12 +14,14 @@ func (v *ValidationErrors) addError(message string) {
 	v.Messages = append(v.Messages, message)
 }
 
+// NewValidationErrors creates a new validation error
 func NewValidationErrors(messages ...string) *ValidationErrors {
 	return &ValidationErrors{
 		Messages: messages,
 	}
 }
 
+// Error returns the error message
 func (v *ValidationErrors) Error() string {
 	data, err := json.Marshal(v.Messages)
 	if err != nil {
@@ -29,6 +31,7 @@ func (v *ValidationErrors) Error() string {
 	return string(data)
 }
 
+// IsValidationError checks if the error is a validation error
 func IsValidationError(err error) bool {
 	var ve *ValidationErrors
 	return errors.As(err, &ve)

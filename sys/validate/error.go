@@ -6,6 +6,7 @@ import (
 	"github.com/pkg/errors"
 )
 
+// ValidationErrors represents a validation error
 type ValidationErrors struct {
 	Messages []string `json:"error_messages"`
 }

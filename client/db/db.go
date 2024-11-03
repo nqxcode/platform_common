@@ -18,7 +18,10 @@ type Client interface {
 
 // TxManager менеджер транзакций, который выполняет указанный пользователем обработчик в транзакции
 type TxManager interface {
+	ReadUncommitted(ctx context.Context, f Handler) error
 	ReadCommitted(ctx context.Context, f Handler) error
+	RepeatableRead(ctx context.Context, f Handler) error
+	Serializable(ctx context.Context, f Handler) error
 }
 
 // Query обертка над запросом, хранящая имя запроса и сам запрос

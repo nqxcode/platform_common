@@ -73,7 +73,22 @@ func (m *manager) transaction(ctx context.Context, opts pgx.TxOptions, fn db.Han
 	return err
 }
 
+func (m *manager) ReadUncommitted(ctx context.Context, f db.Handler) error {
+	txOpts := pgx.TxOptions{IsoLevel: pgx.ReadUncommitted}
+	return m.transaction(ctx, txOpts, f)
+}
+
 func (m *manager) ReadCommitted(ctx context.Context, f db.Handler) error {
 	txOpts := pgx.TxOptions{IsoLevel: pgx.ReadCommitted}
+	return m.transaction(ctx, txOpts, f)
+}
+
+func (m *manager) RepeatableRead(ctx context.Context, f db.Handler) error {
+	txOpts := pgx.TxOptions{IsoLevel: pgx.RepeatableRead}
+	return m.transaction(ctx, txOpts, f)
+}
+
+func (m *manager) Serializable(ctx context.Context, f db.Handler) error {
+	txOpts := pgx.TxOptions{IsoLevel: pgx.Serializable}
 	return m.transaction(ctx, txOpts, f)
 }
